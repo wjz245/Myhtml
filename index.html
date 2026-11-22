@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">项目导览</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' id='favicon'>📚</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
   <style>
     :root {
       --surface-0: #05070C;
@@ -186,15 +186,32 @@
     }
 
     .tag {
-      background: var(--accent-dim);
-      color: var(--accent);
+      background: rgba(56, 189, 248, 0.15);
+      color: rgba(56, 189, 248, 0.95);
       padding: 0.125rem 0.625rem;
       border-radius: var(--radius-full);
       font-size: 0.75rem;
+      font-family: var(--font-mono);
       font-weight: 500;
     }
 
-    .empty-state {
+    .pin-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #F59E0B;
+      font-size: 0.875rem;
+      margin-right: 0.375rem;
+    }
+
+    .item-card.pinned {
+      border-color: rgba(245, 158, 11, 0.3);
+      background: linear-gradient(135deg, var(--surface-2), rgba(245, 158, 11, 0.03));
+    }
+
+    .no-results {
       text-align: center;
       padding: var(--space-xl);
       color: var(--text-tertiary);
@@ -205,6 +222,14 @@
       .items-grid {
         grid-template-columns: 1fr;
       }
+
+      .category-header {
+        grid-template-columns: 1fr;
+      }
+
+      .item-tags {
+        margin-left: 0;
+      }
     }
   </style>
 </head>
@@ -212,14 +237,15 @@
   <div class="container">
     <header>
       <h1 id="siteTitle">项目导览</h1>
-      <p class="subtitle" id="siteDescription">按类别浏览所有文档</p>
+      <p class="subtitle" id="siteSubtitle">探索知识的奇妙旅程</p>
     </header>
 
     <input
       type="text"
       class="search-bar"
       id="searchInput"
-      placeholder="搜索标题、描述或标签..."
+      placeholder="搜索项目、标签或描述..."
+      autocomplete="off"
     >
 
     <div id="content"></div>
@@ -227,36 +253,25 @@
 
   <script>
     let allData = [];
-    let siteConfig = {};
+    let searchTerm = '';
 
-    async function loadSiteConfig() {
+    async function loadConfig() {
       try {
         const response = await fetch('site.json');
-        siteConfig = await response.json();
-
-        // 更新页面标题和图标
-        document.getElementById('pageTitle').textContent = siteConfig.title || '项目导览';
-        document.getElementById('siteTitle').textContent = `${siteConfig.icon || '📚'} ${siteConfig.title || '项目导览'}`;
-        document.getElementById('siteDescription').textContent = siteConfig.description || '按类别浏览所有文档';
-
-        // 更新主题色
-        if (siteConfig.theme) {
-          const root = document.documentElement;
-          if (siteConfig.theme.accent) {
-            root.style.setProperty('--accent', siteConfig.theme.accent);
-          }
-          if (siteConfig.theme.accentMuted) {
-            root.style.setProperty('--accent-dim', siteConfig.theme.accentMuted);
-          }
+        const config = await response.json();
+        document.getElementById('pageTitle').textContent = config.title;
+        document.getElementById('siteTitle').textContent = config.title;
+        document.getElementById('siteSubtitle').textContent = config.description;
+        if (config.searchPlaceholder) {
+          document.querySelector('.search-bar').placeholder = config.searchPlaceholder;
         }
 
-        // 更新 favicon
-        if (siteConfig.icon) {
-          const favicon = document.querySelector('link[rel="icon"]');
-          favicon.href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${siteConfig.icon}</text></svg>`;
+        const favicon = document.querySelector('link[rel="icon"]');
+        if (config.icon) {
+          favicon.href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${config.icon}</text></svg>`;
         }
-      } catch (error) {
-        console.warn('未找到 site.json，使用默认配置');
+      } catch (e) {
+        console.log('No site.json found, using defaults');
       }
     }
 
@@ -264,10 +279,11 @@
       try {
         const response = await fetch('data.json');
         allData = await response.json();
-        renderContent(allData);
+        renderCategories(allData);
       } catch (error) {
+        console.error('Failed to load data:', error);
         document.getElementById('content').innerHTML =
-          '<div class="empty-state">加载数据失败，请确保运行了构建脚本</div>';
+          '<div class="no-results">数据加载失败</div>';
       }
     }
 
@@ -277,18 +293,30 @@
         year: 'numeric',
         month: '2-digit',
         day: '2-digit'
-      });
+      }).replace(/\//g, '-');
     }
 
-    function renderContent(data) {
-      const container = document.getElementById('content');
+    function renderCategories(categories) {
+      const content = document.getElementById('content');
 
-      if (!data || data.length === 0) {
-        container.innerHTML = '<div class="empty-state">暂无内容</div>';
+      if (!categories || categories.length === 0) {
+        content.innerHTML = '<div class="no-results">暂无内容</div>';
         return;
       }
 
-      container.innerHTML = data.map(category => `
+      const filteredCategories = categories
+        .map(cat => ({
+          ...cat,
+          items: cat.items.filter(item => matchesSearch(item))
+        }))
+        .filter(cat => cat.items.length > 0);
+
+      if (filteredCategories.length === 0) {
+        content.innerHTML = '<div class="no-results">未找到匹配的内容</div>';
+        return;
+      }
+
+      content.innerHTML = filteredCategories.map(category => `
         <div class="category">
           <div class="category-header">
             <h2 class="category-title">${category.name}</h2>
@@ -296,12 +324,14 @@
           </div>
           <div class="items-grid">
             ${category.items.map(item => `
-              <a href="${item.path}" class="item-card">
-                <h3 class="item-title">${item.title}</h3>
-                ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
+              <a href="${item.path}" class="item-card${item.pinned ? ' pinned' : ''}">
+                <div class="item-title">
+                  ${item.pinned ? '<span class="pin-icon">📌</span>' : ''}${item.title}
+                </div>
+                ${item.description ? `<div class="item-description">${item.description}</div>` : ''}
                 <div class="item-meta">
                   <span class="item-date">${formatDate(item.modified)}</span>
-                  ${item.tags.length > 0 ? `
+                  ${item.tags && item.tags.length > 0 ? `
                     <div class="item-tags">
                       ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
@@ -314,35 +344,27 @@
       `).join('');
     }
 
-    function filterContent(searchTerm) {
-      if (!searchTerm.trim()) {
-        renderContent(allData);
-        return;
-      }
+    function matchesSearch(item) {
+      if (!searchTerm) return true;
 
       const term = searchTerm.toLowerCase();
-      const filtered = allData.map(category => ({
-        name: category.name,
-        items: category.items.filter(item =>
-          item.title.toLowerCase().includes(term) ||
-          item.description.toLowerCase().includes(term) ||
-          item.tags.some(tag => tag.toLowerCase().includes(term)) ||
-          category.name.toLowerCase().includes(term)
-        )
-      })).filter(category => category.items.length > 0);
+      const searchableText = [
+        item.title,
+        item.description,
+        ...(item.tags || [])
+      ].join(' ').toLowerCase();
 
-      renderContent(filtered);
+      return searchableText.includes(term);
     }
 
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      filterContent(e.target.value);
-    });
+    function handleSearch(event) {
+      searchTerm = event.target.value.trim();
+      renderCategories(allData);
+    }
 
-    // 初始化
-    (async () => {
-      await loadSiteConfig();
-      await loadData();
-    })();
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+    Promise.all([loadConfig(), loadData()]);
   </script>
 </body>
 </html>
