@@ -1,0 +1,142 @@
+<!--
+title: 牛顿力学基础
+description: 经典力学的基本定律和应用
+tags: 物理, 力学, 经典物理
+date: 2024-03-15
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>牛顿力学基础</title>
+  <style>
+    :root {
+      --surface-0: #05070C;
+      --surface-2: #0F131C;
+      --surface-3: #161D2B;
+      --accent: #38BDF8;
+      --text-primary: #E5E7EB;
+      --text-secondary: #9CA3AF;
+      color-scheme: dark;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--surface-0);
+      color: var(--text-primary);
+      line-height: 1.8;
+      padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 3vw, 2rem);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .meta {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--surface-3);
+    }
+
+    .law {
+      background: var(--surface-2);
+      border-left: 3px solid var(--accent);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .law-title {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      background: var(--surface-2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <a href="../../index.html" class="back-link">← 返回导览</a>
+
+  <h1>牛顿力学基础</h1>
+  <div class="meta">物理 | 更新于 2024年3月15日</div>
+
+  <p>牛顿力学是经典物理学的基础，由艾萨克·牛顿在17世纪建立。它描述了宏观物体的运动规律，至今仍是工程和日常生活中最重要的物理理论之一。</p>
+
+  <h2>牛顿三大运动定律</h2>
+
+  <div class="law">
+    <div class="law-title">第一定律（惯性定律）</div>
+    <p>任何物体都保持静止或匀速直线运动状态，直到有外力迫使它改变这种状态为止。</p>
+  </div>
+
+  <div class="law">
+    <div class="law-title">第二定律（加速度定律）</div>
+    <p>物体的加速度与所受合外力成正比，与物体的质量成反比，加速度的方向与合外力的方向相同。</p>
+    <p>数学表达式：<code>F = ma</code></p>
+  </div>
+
+  <div class="law">
+    <div class="law-title">第三定律（作用与反作用定律）</div>
+    <p>两个物体之间的作用力和反作用力大小相等、方向相反，作用在同一条直线上。</p>
+  </div>
+
+  <h2>应用领域</h2>
+
+  <p>牛顿力学广泛应用于：</p>
+  <ul style="margin-left: 2rem; color: var(--text-secondary);">
+    <li>机械工程设计</li>
+    <li>航天器轨道计算</li>
+    <li>建筑结构分析</li>
+    <li>车辆运动控制</li>
+  </ul>
+
+  <h2>局限性</h2>
+
+  <p>当物体运动速度接近光速时，需要使用相对论力学；当研究微观粒子时，需要使用量子力学。但在日常尺度下，牛顿力学仍然是最实用和准确的理论。</p>
+</body>
+</html>

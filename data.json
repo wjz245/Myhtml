@@ -1,0 +1,40 @@
+[
+  {
+    "name": "摘抄",
+    "items": [
+      {
+        "filename": "活着-经典片段.html",
+        "path": "categories/摘抄/活着-经典片段.html",
+        "title": "《活着》经典片段",
+        "description": "余华小说中令人动容的文字摘录",
+        "tags": [
+          "文学",
+          "余华",
+          "小说摘抄"
+        ],
+        "date": "2024-03-20",
+        "modified": "2026-11-22T07:39:26.811Z",
+        "category": "摘抄"
+      }
+    ]
+  },
+  {
+    "name": "物理",
+    "items": [
+      {
+        "filename": "牛顿力学基础.html",
+        "path": "categories/物理/牛顿力学基础.html",
+        "title": "牛顿力学基础",
+        "description": "经典力学的基本定律和应用",
+        "tags": [
+          "物理",
+          "力学",
+          "经典物理"
+        ],
+        "date": "2024-03-15",
+        "modified": "2026-11-22T07:39:12.115Z",
+        "category": "物理"
+      }
+    ]
+  }
+]

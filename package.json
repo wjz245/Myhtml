@@ -1,0 +1,16 @@
+{
+  "name": "static-navigator",
+  "version": "1.0.0",
+  "description": "Static site with automatic category navigation",
+  "scripts": {
+    "build": "node build/scan.js",
+    "preview": "npm run build && npx http-server -p 8080 -o",
+    "deploy": "node build/deploy.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
