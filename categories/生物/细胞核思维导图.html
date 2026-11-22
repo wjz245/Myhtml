@@ -1,0 +1,483 @@
+<!--
+title: 细胞核——系统的控制中心
+description: 高中生物必修一细胞核知识点思维导图
+tags: 生物, 细胞核, 思维导图, 必修一
+date: 2026-11-22
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高中生物必修一：细胞核——系统的控制中心（思维导图）</title>
+  <style>
+    :root {
+      --bg-page: #f1f5f9;
+      --paper-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-sub: #475569;
+      --line-color: #94a3b8;
+
+      /* 四大主分支配色 */
+      --c1: #0284c7; --c1-bg: #f0f9ff; --c1-bd: #bae6fd; /* 分布与数量 */
+      --c2: #059669; --c2-bg: #ecfdf5; --c2-bd: #a7f3d0; /* 细胞核结构 */
+      --c3: #d97706; --c3-bg: #fffbeb; --c3-bd: #fde68a; /* 功能与实验 */
+      --c4: #7c3aed; --c4-bg: #f5f3ff; --c4-bd: #ddd6fe; /* 模型与易错 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* 顶部操作栏（打印时自动隐藏） */
+    .toolbar {
+      width: 297mm;
+      max-width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .btn-print {
+      background: #1d4ed8;
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-print:hover {
+      background: #1e40af;
+    }
+
+    /* A4 横向画布：297mm x 210mm */
+    .a4-sheet {
+      width: 297mm;
+      height: 210mm;
+      background: var(--paper-bg);
+      padding: 8mm 10mm;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.1);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* 顶部标题 */
+    .sheet-header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+
+    .sheet-header h1 {
+      font-size: 16.5px;
+      color: #0f172a;
+      letter-spacing: 0.5px;
+    }
+
+    /* 标准单侧树状思维导图容器（左 -> 右展开） */
+    .tree-container {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      position: relative;
+    }
+
+    /* 最左侧根节点 */
+    .root-wrapper {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .root-node {
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      color: #ffffff;
+      border: 2.5px solid #93c5fd;
+      border-radius: 12px;
+      padding: 16px 14px;
+      width: 122px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+    }
+
+    .root-node h2 {
+      font-size: 20px;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .root-node p {
+      font-size: 11px;
+      color: #dbeafe;
+      line-height: 1.35;
+    }
+
+    /* 根节点向右延伸的主干横线 */
+    .root-stem {
+      width: 18px;
+      height: 2.5px;
+      background: #2563eb;
+    }
+
+    /* 右侧四大分支纵向列 */
+    .branches-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      height: 100%;
+      gap: 6px;
+    }
+
+    /* 单个一级分支行 */
+    .branch-row {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    /* 左侧垂直主干连线（连接上下各个一级分支） */
+    .branch-row::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -4px;
+      bottom: -4px;
+      width: 2.5px;
+      background: #2563eb;
+    }
+
+    .branch-row:first-child::before {
+      top: 50%;
+    }
+
+    .branch-row:last-child::before {
+      bottom: 50%;
+    }
+
+    /* 垂直主干连向一级节点的水平短线 */
+    .branch-row::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 18px;
+      height: 2.5px;
+      background: #2563eb;
+      transform: translateY(-50%);
+    }
+
+    /* 一级分支标题胶囊 */
+    .l1-node {
+      width: 118px;
+      flex-shrink: 0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.3;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 一级节点向右连接二级内容块的短线 */
+    .l1-stem {
+      width: 14px;
+      height: 2px;
+      flex-shrink: 0;
+    }
+
+    /* 二级子内容容器 */
+    .l2-content {
+      flex: 1;
+      border-radius: 8px;
+      border: 1.5px solid;
+      padding: 6px 10px;
+      font-size: 11px;
+      line-height: 1.42;
+    }
+
+    .kw {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .hl {
+      background: #ffffff;
+      padding: 0 3px;
+      border-radius: 3px;
+      font-weight: 600;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    /* 列表样式 */
+    .inline-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px 12px;
+    }
+
+    .inline-list li {
+      padding-left: 9px;
+      position: relative;
+    }
+
+    .inline-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    /* 4栏结构/实验卡片网格 */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 5px;
+      padding: 4px 6px;
+      font-size: 10.5px;
+      line-height: 1.35;
+    }
+
+    .mini-card-title {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .bottom-note {
+      margin-top: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 4px;
+      padding: 3px 7px;
+      font-size: 10.5px;
+      border-left: 3px solid;
+    }
+
+    /* 分支主题色绑定 */
+    .b1 .l1-node, .b1 .l1-stem { background: var(--c1); }
+    .b1 .l2-content { background: var(--c1-bg); border-color: var(--c1-bd); }
+    .b1 .inline-list li::before { color: var(--c1); }
+
+    .b2 .l1-node, .b2 .l1-stem { background: var(--c2); }
+    .b2 .l2-content { background: var(--c2-bg); border-color: var(--c2-bd); }
+    .b2 .mini-card-title { color: #047857; }
+    .b2 .bottom-note { border-color: var(--c2); }
+
+    .b3 .l1-node, .b3 .l1-stem { background: var(--c3); }
+    .b3 .l2-content { background: var(--c3-bg); border-color: var(--c3-bd); }
+    .b3 .mini-card-title { color: #b45309; }
+    .b3 .bottom-note { border-color: var(--c3); }
+
+    .b4 .l1-node, .b4 .l1-stem { background: var(--c4); }
+    .b4 .l2-content { background: var(--c4-bg); border-color: var(--c4-bd); }
+    .b4 .inline-list li::before { color: var(--c4); }
+
+    /* 底部记忆口诀 */
+    .sheet-footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 4px;
+      margin-top: 5px;
+      text-align: right;
+      font-size: 10.5px;
+      color: #64748b;
+    }
+
+    /* 打印专用规则 */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .a4-sheet {
+        width: 297mm;
+        height: 210mm;
+        box-shadow: none;
+        border-radius: 0;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 打印操作栏 -->
+  <div class="toolbar">
+    <div>
+      💡 <strong>打印提示：</strong>点击右侧按钮打印，纸张方向选择 <strong>“横向 (Landscape)”</strong>，缩放设为 <strong>“100%”</strong>，并勾选 <strong>“背景图形”</strong>。
+    </div>
+    <button class="btn-print" onclick="window.print()">🖨️ 打印 / 导出 A4 PDF</button>
+  </div>
+
+  <!-- A4 横向画布 -->
+  <div class="a4-sheet">
+    <div class="sheet-header">
+      <h1>🧬 高中生物必修一 · 第3章 第3节《细胞核——系统的控制中心》思维导图</h1>
+    </div>
+
+    <!-- 单侧树状思维导图（从左向右展开） -->
+    <div class="tree-container">
+      <!-- 左侧根节点 -->
+      <div class="root-wrapper">
+        <div class="root-node">
+          <h2>细胞核</h2>
+          <p>系统的控制中心</p>
+        </div>
+        <div class="root-stem"></div>
+      </div>
+
+      <!-- 右侧四大分支 -->
+      <div class="branches-col">
+
+        <!-- 分支 1：分布与数量 -->
+        <div class="branch-row b1">
+          <div class="l1-node">一、分布规律<br/>与数量特征</div>
+          <div class="l1-stem"></div>
+          <div class="l2-content">
+            <ul class="inline-list">
+              <li><span class="kw">一般真核细胞：</span>绝大多数具有 <span class="hl">1个</span> 细胞核。</li>
+              <li><span class="kw">特殊无核（真核）：</span><span class="hl">哺乳动物成熟的红细胞</span>、高等植物成熟的筛管细胞（寿命较短）。</li>
+              <li><span class="kw">特殊多核（真核）：</span>骨骼肌细胞（多核）、双小核草履虫（2个核）。</li>
+              <li><span class="kw">原核细胞：</span>无核膜包被的细胞核，只有 <span class="hl">拟核</span>（无核膜、核仁、染色体）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 分支 2：细胞核的结构 -->
+        <div class="branch-row b2">
+          <div class="l1-node">二、细胞核的<br/>四大结构</div>
+          <div class="l1-stem"></div>
+          <div class="l2-content">
+            <div class="grid-4">
+              <div class="mini-card">
+                <span class="mini-card-title">1. 核膜（双层膜）</span>
+                • 由 <span class="hl">4层磷脂分子</span> 构成，外膜常与内质网相连。<br/>
+                • <strong>功能：</strong>把核内物质与细胞质分开（选择透过性）。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">2. 核孔（大分子通道）</span>
+                • 实现核质间频繁的 <span class="hl">物质交换</span> 和 <span class="hl">信息交流</span>。<br/>
+                • <strong>选择性：</strong>RNA、蛋白质可进出；<strong>DNA不能出核</strong>。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">3. 核仁（折光性强）</span>
+                • 与 <span class="hl">rRNA的合成</span> 及 <span class="hl">核糖体的形成</span> 有关。<br/>
+                • 蛋白质合成旺盛的细胞中，核仁较大、核孔较多。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">4. 染色质（遗传载体）</span>
+                • <strong>成分：</strong>主要由 <span class="hl">DNA和蛋白质</span> 组成。<br/>
+                • <strong>特性：</strong>易被 <span class="hl">碱性染料</span>（如甲紫溶液）染成深色。
+              </div>
+            </div>
+            <div class="bottom-note">
+              <strong style="color:#047857;">★ 染色质与染色体关系：</strong><span class="hl">同一种物质在细胞不同时期的两种存在状态</span>（分裂间期为细长丝状<strong>染色质</strong> ⇌ 分裂期高度螺旋化、缩短变粗为杆状<strong>染色体</strong>）。
+            </div>
+          </div>
+        </div>
+
+        <!-- 分支 3：细胞核的功能及实验证据 -->
+        <div class="branch-row b3">
+          <div class="l1-node">三、核心功能<br/>与实验证据</div>
+          <div class="l1-stem"></div>
+          <div class="l2-content">
+            <div class="grid-4">
+              <div class="mini-card">
+                <span class="mini-card-title">① 黑白美西螈核移植</span>
+                黑美西螈胚胎细胞核移入去核白卵细胞 → 发育为黑色。<br/>
+                <strong>结论：</strong>肤色遗传受 <span class="hl">细胞核</span> 控制。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">② 蝾螈受精卵横缢</span>
+                有核一半正常分裂分化；无核一半停止，挤入核后恢复。<br/>
+                <strong>结论：</strong>细胞 <span class="hl">分裂、分化</span> 受核控制。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">③ 变形虫切割实验</span>
+                无核部分不摄食、不生长；植入新核后恢复生命活动。<br/>
+                <strong>结论：</strong><span class="hl">生命活动</span> 受核控制（核质依存）。
+              </div>
+              <div class="mini-card">
+                <span class="mini-card-title">④ 伞藻嫁接与核移植</span>
+                伞帽形状与提供 <span class="hl">假根（含核）</span> 一致，核移植排除细胞质干扰。<br/>
+                <strong>结论：</strong><span class="hl">形态建成</span> 主要与核有关。
+              </div>
+            </div>
+            <div class="bottom-note">
+              <strong style="color:#b45309;">★ 功能总结：</strong>细胞核是 <span class="hl">遗传信息库</span>，是 <span class="hl">细胞代谢和遗传的控制中心</span>（注：代谢的主要场所是细胞质基质，而非细胞核）。
+            </div>
+          </div>
+        </div>
+
+        <!-- 分支 4：模型建构与高频易错点 -->
+        <div class="branch-row b4">
+          <div class="l1-node">四、模型建构<br/>与高频易错</div>
+          <div class="l1-stem"></div>
+          <div class="l2-content">
+            <ul class="inline-list">
+              <li><span class="kw">物理模型：</span>以实物或图画直观表达对象特征（如真核细胞三维结构模型）。<strong>显微照片不属于物理模型</strong>；建构时 <span class="hl">科学性、准确性</span> 居首位。</li>
+              <li><span class="kw">概念 & 数学模型：</span>文字箭头梳理过程为概念模型；曲线图、公式为数学模型。</li>
+              <li><span class="kw">易错辨析①：</span>核孔运输大分子具有选择性，且需要消耗能量（ATP）。</li>
+              <li><span class="kw">易错辨析②：</span>原核细胞无核仁，但仍有核糖体（并非所有核糖体形成都依赖核仁）。</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 底部记忆口诀 -->
+    <div class="sheet-footer">
+      <span>记忆口诀：双膜四层分核质，核孔选择传信息；核仁造rRNA与核糖体，染色质（体）DNA藏秘密。</span>
+    </div>
+  </div>
+
+</body>
+</html>
